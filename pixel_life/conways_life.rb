@@ -1,12 +1,13 @@
 require 'pixel_life'
 
 def main
-	width, height = 100, 100
-	grid = Grid.new width, height
+	width, height = 100, 50
+	density = ARGV[0].to_i
+	density = (width * height) / 5 unless ARGV[0]
 
+	grid = Grid.new width, height
 	life = Conway.new grid
-	life.randomize :cells => 1_000
-	#life.add Blinker.new 50, 50
+	life.randomize density
 
 	window = PixelWindow.new "Conway's Life", grid
 	window.on_update = lambda{ life.tick }
@@ -20,29 +21,23 @@ class Conway
 	def add pattern
 		pattern.cells.each {|cell| @grid.flip cell }
 	end
-	def randomize args
+	def randomize density
 		max_width = @grid.width - 1
 		max_height = @grid.height - 1
-		args[:cells].times { @grid.flip random_pos(max_width, max_height) }
+		density.times { @grid.flip random_pos(max_width, max_height) }
 	end
 	def random_pos max_width, max_height
 		Pos.new rand(max_width) + 1, rand(max_height) + 1
 	end
 	def tick
-		start = Time.now
 		@grid.cells.each {|cell| cell.evaluate_transition(@grid) }
-		puts "Evaluation: #{Time.now - start} seconds"
 		@grid.cells.each {|cell| cell.perform_transition }
-		puts "* Tick in #{Time.now - start} seconds"
-		#Kernel.exit(0)
 	end
 end
 
 class Cell # Extending the cell class
 	def evaluate_transition grid
 		live_neighbours = grid.get_neighbours_of(self).live_count
-		#puts "#{live_neighbours} live adjacent to live cell #{self.pos.width},#{self.pos.height}" if  alive?
-		#puts "#{live_neighbours} live adjacent to dead cell #{self.pos.width},#{self.pos.height}" unless alive?
 		if alive?
 			@should_be_alive = (live_neighbours == 2 or live_neighbours == 3)
 		else
@@ -84,18 +79,6 @@ class Array
 		self.inject(0) do |acc, cell|
 			acc + ((cell and cell.alive?) ? 1 : 0)
 		end
-	end
-end
-
-# PATTERNS
-
-class Blinker
-	attr_reader :cells
-	def initialize pos_width, pos_height
-		@cells = []
-		@cells << Pos.new(pos_width, pos_height)
-		@cells << Pos.new(pos_width, pos_height + 1)
-		@cells << Pos.new(pos_width, pos_height + 2)
 	end
 end
 
