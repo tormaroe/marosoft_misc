@@ -82,4 +82,6 @@ class Array
 	end
 end
 
-main # starts the program
+if __FILE__ == $0
+	main # starts the program
+end
