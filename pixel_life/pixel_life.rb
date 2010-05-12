@@ -73,6 +73,9 @@ class Grid
 		c.color = c.color == :black ? :white : :black 
 	end
 	def index_for_pos pos
+		if pos.width < 1 or pos.height < 1 or pos.width > @width or pos.height > @height
+			raise "invalid_position"
+		end
 		(@width * (pos.height-1)) + pos.width
 	end
 	def cell_at pos
