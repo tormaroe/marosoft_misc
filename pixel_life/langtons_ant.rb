@@ -28,7 +28,7 @@ def center width, height
 end
 
 class Ant
-	attr_accessor :pos, :direction, :grid
+	attr_accessor :pos 
 	def initialize args
 		@pos = args[:pos]
 		@direction = args[:direction]

@@ -52,7 +52,7 @@ class Pos < Struct.new(:width, :height); end
 class Cell < Struct.new(:pos, :color); end
 
 class Grid
-	attr_reader :width, :height, :cells
+	attr_reader :cells, :width, :height
 	def initialize width, height
 		@width, @height = width, height
 		initialize_cells
@@ -74,6 +74,9 @@ class Grid
 	end
 	def index_for_pos pos
 		(@width * (pos.height-1)) + pos.width
+	end
+	def cell_at pos
+		@cells[index_for_pos(pos)]
 	end
 end
 
