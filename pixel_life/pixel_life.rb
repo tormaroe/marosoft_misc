@@ -1,6 +1,7 @@
 require 'gosu'
 
 class PixelWindow < Gosu::Window
+	attr_writer :on_update, :on_draw
 	# The magic number '2' is the size of each cell (duplicated for performance reasons)
 	def initialize title, grid
 		@grid = grid
@@ -13,16 +14,8 @@ class PixelWindow < Gosu::Window
 
 		@time = Time.now
 	end
-	
-	def on_update= delegate
-		@on_update_delegate = delegate
-	end
-	def on_draw= delegate
-		@on_draw_delegate = delegate
-	end
-
 	def update
-		@on_update_delegate.call if @on_update_delegate
+		@on_update.call if @on_update
 		count_off
 	end
 	def count_off
@@ -40,7 +33,7 @@ class PixelWindow < Gosu::Window
 				cell.pos.height * 2, 
 				0) if cell.color == :white
 		end
-		@on_draw_delegate.call if @on_draw_delegate
+		@on_draw.call if @on_draw
 	end
 	def draw_red pos
 		@red.draw(pos.width * 2, pos.height * 2, 0)
