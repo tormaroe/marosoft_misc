@@ -8,15 +8,10 @@ namespace fake_gateway
     class Program
     {
         static void Main(string[] args)
-        {            
-            try
-            {
-                new Program().Run(args[0], Int32.Parse(args[1]));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("EXCEPTION\n{0}", ex.ToString());
-            }
+        {    
+            new Program().Run(
+                args[0], 
+                Int32.Parse(args[1]));
         }
 
         private Encoding ISOencoding = Encoding.GetEncoding("ISO-8859-1");
